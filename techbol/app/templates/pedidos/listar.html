@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Pedidos{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="page-title"><i class="bi bi-cart3 me-2"></i>Pedidos</h2>
+    <a href="{{ url_for('bp_pedidos.crear') }}" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-1"></i> Nuevo Pedido
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-3">#</th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Producto</th>
+                    <th>Monto</th>
+                    <th class="text-end pe-3">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in pedidos %}
+                <tr>
+                    <td class="ps-3 text-muted">{{ p.id }}</td>
+                    <td>{{ p.fecha.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>{{ p.cliente.nombre }}</td>
+                    <td>{{ p.producto.nombre }}</td>
+                    <td class="fw-semibold">Bs. {{ "%.2f"|format(p.monto) }}</td>
+                    <td class="text-end pe-3">
+                        <a href="{{ url_for('bp_pedidos.editar', id=p.id) }}" class="btn btn-sm btn-outline-primary me-1">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <form action="{{ url_for('bp_pedidos.eliminar', id=p.id) }}" method="POST" class="d-inline"
+                              onsubmit="return confirm('¿Eliminar este pedido?')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">No hay pedidos registrados.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
